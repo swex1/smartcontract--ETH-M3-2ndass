@@ -7,7 +7,7 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 contract Assessment is ERC20 {
     address public owner;
 
-    constructor() ERC20("VikasPhulriya", "VP") {
+    constructor() ERC20("AnshumanRoshan", "AR") {
         owner = msg.sender;
         _mint(msg.sender, 100);
     }
