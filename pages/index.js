@@ -124,7 +124,7 @@ export default function HomePage() {
 
   return (
     <main className="container">
-      <header><h1>Vikas Phulriya Welcomes You</h1></header>
+      <header><h1>Anshuman Roshan Welcomes You</h1></header>
       {tokenSymbol!==undefined?<div>
         <h2>Account Address:{account}</h2>
         <h2 onClick={async()=>{
