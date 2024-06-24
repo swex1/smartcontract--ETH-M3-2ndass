@@ -27,8 +27,7 @@ By utilizing this contract, you can easily manage the creation and destruction o
 
 Now, you can use Remix, an online Solidity IDE. To get started, go to the Remix website at https://remix.ethereum.org/.
 
-Once you are on the Remix website, create a new file by clicking on the "+" icon in the left-hand sidebar. Save the file with a .sol extension (e.g., <YourFileNameHere>.sol). Copy and paste the code of this file --> [FileLink](https://github.com/vikasphulariya/Module3_eth_avax/blob/main/contracts/MyToken.sol)
-
+Once you are on the Remix website, create a new file by clicking on the "+" icon in the left-hand sidebar. Save the file with a .sol extension (e.g., <YourFileNameHere>.sol). Copy and paste the code of this file --> [FileLink](https://github.com/Anshuman161203/metacrafters_ETH-AVAX-PROOF_Project_Module_2/edit/main/contracts/Assessment.sol)
 
 To compile the code, click on the "Solidity Compiler" tab in the left-hand sidebar. Make sure the "Compiler" option is set to "0.8.18" (or another compatible version), and then click on the "Compile <YourFileNameHere>.sol" button.
 
