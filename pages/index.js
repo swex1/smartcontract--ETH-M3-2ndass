@@ -1,165 +1,192 @@
 import { useState, useEffect } from "react";
 import { ethers } from "ethers";
-import atm_abi from "../artifacts/contracts/Assessment.sol/Assessment.json";
+import crypto_making_tree_abi from "../artifacts/contracts/Frontend.sol/Frontend.json";
 
-export default function HomePage() {
-  const [ethWallet, setEthWallet] = useState(undefined);
-  const [account, setAccount] = useState(undefined);
-  const [atm, setATM] = useState(undefined);
+export default function Homepage() {
+  const [meMessage, setMeMessage] = useState("Account Holder Name: ANSHUMAN ROSHAN");
+  const [defaultAccount, setDefaultAccount] = useState(undefined);
   const [balance, setBalance] = useState(undefined);
-  const [TokenName, setSetTokenName] = useState(undefined);
-  const [tokenSymbol, setTokenSymbol] = useState(undefined);
-  const [constracAddress, setContractAddress] = useState("");
-  const [tokenstoMint, setTokenstoMint] = useState(undefined);
-  const [tokenstoBurn, setTokenstoBurn] = useState(undefined);
-  const atmABI = atm_abi.abi;
+  const [ethWallet, setEthWallet] = useState(undefined);
+  const [Frontend, setFrontend] = useState(undefined);
+
+  const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+  const smcABI = crypto_making_tree_abi.abi;
+
+  const getBalance = async () => {
+    if (Frontend) {
+      setBalance((await Frontend.getBalance()).toNumber());
+    }
+  };
+
+  const topUp = async () => {
+    if (Frontend) {
+      let tx = await Frontend.topUp(1);
+      await tx.wait();
+      getBalance();
+    }
+  };
+
+  const cashOut = async () => {
+    if (Frontend) {
+      let tx = await Frontend.cashOut(1);
+      await tx.wait();
+      getBalance();
+    }
+  };    
+
+  const verifyAddress = async () => {
+    if (Frontend) {
+      try {
+        const result = await Frontend.verifyAddress(defaultAccount[0]); // Replace with your verification logic
+        setVerificationResult(result); // Set the verification result
+      } catch (error) {
+        console.error("Error verifying address:", error);
+        setVerificationResult("Error verifying address");
+      }
+    }
+  };
+
+  const accessTransaction = async () => {
+    if (Frontend) {
+      try {
+        const txResult = await Frontend.accessResource(); 
+        console.log("Access Transaction Result:", txResult);
+      } catch (error) {
+        console.error("Error during access transaction:", error);
+      }
+    }
+  };
+
+  const displayAddress = async () => {
+    if (Frontend) {
+      let tx = await Frontend.displayAddress();
+      await tx.wait();
+    }
+  };
 
   const getWallet = async () => {
     if (window.ethereum) {
       setEthWallet(window.ethereum);
+      console.log("getwallet is executed");
     }
 
-  }
-
-  const handleAccount = (account) => {
-    if (account) {
-      console.log("Account connected: ", account);
-      setAccount(account);
+    if (ethWallet) {
+      const account = await ethWallet.request({ method: "eth_accounts" });
+      accountHandler(account);
     }
-    else {
-      console.log("No account found");
-    }
-  }
-
-  const connectAccount = async (contractAddress) => {
-
-
-    const accounts = await ethWallet.request({ method: 'eth_requestAccounts' });
-    handleAccount(accounts);
-
-    // once wallet is set we can get a reference to our deployed contract
-    getContract(contractAddress);
   };
 
-  const getContract = (contractAddress) => {
+  const accountHandler = async (accounts) => {
+    if (accounts) {
+      console.log("Account connected =", accounts);
+      setDefaultAccount(accounts);
+    } else {
+      console.log("Account Not Located");
+    }
+  };
+
+  const connectWalletHandler = async () => {
+    if (!ethWallet) {
+      alert("MetaMask Wallet is required to Connect");
+      return;
+    }
+
+    const accounts = await ethWallet.request({ method: "eth_requestAccounts" });
+
+    accountHandler(accounts);
+
+    getMyContract();
+  };
+
+  const getMyContract = async () => {
     const provider = new ethers.providers.Web3Provider(ethWallet);
     const signer = provider.getSigner();
-    const atmContract = new ethers.Contract(contractAddress, atmABI, signer);
+    const contract = new ethers.Contract(contractAddress, smcABI, signer);
 
-    setATM(atmContract);
-  }
-
-  const getInfo = async ()=>{
-    setTokenSymbol(await atm.symbol())
-    setSetTokenName(await atm.name())
-
-  }
-
-  const getBalance = async () => {
-    if (atm) {
-      setBalance((await atm.totalSupply()).toNumber());
-    }
-  }
-
-  const Minter = async () => {
-    if (tokenstoMint <= 0 || tokenstoMint === undefined) {
-      alert("Please enter a Valid")
-    }
-    else {
-      let tx = await atm.mint(tokenstoMint);
-      await tx.wait()
-      getBalance();
-      setTokenstoMint("");
-      // console.log("Balance")
-    }
-  }
-  const Burner = async () => {
-           
-    if (tokenstoBurn <= 0 || tokenstoBurn === undefined) {
-      alert("Please enter a Valid")
-    }
-    else {
-      let tx = await atm.burn(tokenstoBurn);
-      await tx.wait()
-      getBalance();
-      setTokenstoBurn("");
-    }
-  }
+    setFrontend(contract);
+  };
 
   const initUser = () => {
-    // Check to see if user has Metamask
     if (!ethWallet) {
-      return <p>Please install Metamask</p>
+      return <p>Enhance your experience by installing the MetaMask browser extension</p>;
     }
-
-    // Check to see if user is connected. If not, connect to their account
-    if (!account) {
-
+    if (!defaultAccount) {
       return (
-        <div>
-
-      <input style={{width:300}} placeholder="Enter Contract addres of deployed Contract" onChange={(e)=>{setContractAddress(e.target.value)}}></input>
-      <br />
-      <br />
-      <button onClick={()=>{
-        console.log(constracAddress.length);
-        if(constracAddress.length === 42){
-          
-          connectAccount(constracAddress);
-        }else{
-          alert("Please enter valid address");
-        }
-        }}>Connect</button>
-        </div>
-      )
+        <button
+          onClick={connectWalletHandler}
+          style={{ color: "white", background: "Red" }}
+        >
+          <h3>"Link to Your Wallet"</h3>
+        </button>
+      );
     }
 
-    if (balance == undefined) {
-      getInfo()
-      getBalance();
-    }
-  }
+    getBalance();
 
-  useEffect(() => { getWallet(); }, []);
+    // Inside the return statement of the `initUser` function
+return (
+  <div>
+    <h3 style={{ color: "Brown" }}>User Account : {defaultAccount}</h3>
+    <p style={{ color: "Blue" }}>User Balance : {balance}</p>
+    <button
+      onClick={displayAddress}
+      style={{ color: "Violet", background: "blue" }}
+    >
+      <h3 >Verify Address </h3>
+    </button>
+    <button
+      onClick={topUp}
+      style={{ color: "Black", background: "pink" }}
+    >
+      <h3 >Top Up Balance</h3>
+    </button>
+    <button
+      onClick={cashOut}
+      style={{ color: "white", background: "green" }}
+    >
+      <h3>Cash Out</h3>
+    </button>
+    <button
+      onClick={displayAddress}
+      style={{ color: "white", background: "blue" }}
+    >
+      <h3 >accessTransaction</h3>
+    </button>
+    
+    
+  </div>
+);
+  };
+
+  useEffect(() => {
+    getWallet();
+  }, []);
 
   return (
-    <main className="container">
-      <header><h1>Anshuman Roshan Welcomes You</h1></header>
-      {tokenSymbol!==undefined?<div>
-        <h2>Account Address:{account}</h2>
-        <h2 onClick={async()=>{
-          console.log((await atm.totalSupply()).toNumber())
-          alert("xcxc")
+    <main className="ANSHUMAN ROSHAN">
+      <h1>
+        <marquee width="60%" direction="Left" height="80%">
+        Welcome to Metacrafters ATM, where your banking journey begins with a warm greeting!
+        </marquee>
+      </h1>
+      <h2>{meMessage}</h2>
 
-          }}>Token Name:{TokenName}</h2>
-        <h2>Token Symbol:{tokenSymbol}</h2>
-        <h2>Token Supply:{balance}</h2>
-        <h1>Token Minter</h1>
-
-        <input type='number' value={tokenstoMint} onChange={(e) => { setTokenstoMint(e.target.valueAsNumber) }} style={{ padding: 10, borderWidth: 2, borderRadius: 10, width: 200 }} placeholder="Number Of Tokens to Mint"></input>
-        <br />
-        <br />
-        <button style={{ padding: 10, borderWidth: 2, borderRadius: 10, fontWeight: 900, fontSize: 15 }}
-          onClick={()=>{Minter()}}>Mint</button>
-        <br />
-        <br />
-        <h1>Token Burner</h1>
-        <input type='number' value={tokenstoBurn} onChange={(e) => { setTokenstoBurn(e.target.valueAsNumber) }} style={{ padding: 10, borderWidth: 2, borderRadius: 10, width: 200 }} placeholder="Number Of Tokens to Mint"></input>
-        <br />
-        <br />
-        <button style={{ padding: 10, borderWidth: 2, borderRadius: 10, fontWeight: 900, fontSize: 15 }}
-          onClick={async () => { Burner()}}>Burn</button>
-      </div>:null}
       {initUser()}
       <style jsx>{`
-        .container {
-          text-align: center
-        };
-        .inputBox{
-          
+        .ANSHUMAN {
+          background-image: url("https://images.unsplash.com/photo-1536514498073-50e69d39c6cf?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8d2hpdGUlMjBza3l8ZW58MHx8MHx8fDA%3D&w=1000&q=80");
+          background-position: center;
+          background-size: cover;
+          /* Adjust this to control how the image is displayed */
+          width: 100%;
+          /* Make sure it covers the entire viewport width */
+          height: 100vh;
+          /* Make it cover the entire viewport height */
+          text-align: center;
+          color: Black;
+          text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
-      `}
-      </style>
+      `}</style>
     </main>
-  )
+  );
 }
