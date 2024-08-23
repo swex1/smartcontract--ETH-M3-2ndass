@@ -1,0 +1,40 @@
+{
+  "_format": "hh-sol-cache-2",
+  "files": {
+    "C:\\Users\\sweta\\OneDrive\\Desktop\\2nd\\metacrafters_ETH-AVAX-PROOF_Project_Module_2\\contracts\\Frontend.sol": {
+      "lastModificationDate": 1724434091913,
+      "contentHash": "2e5cd01ac6bae846dc93ced32be06cd8",
+      "sourceName": "contracts/Frontend.sol",
+      "solcConfig": {
+        "version": "0.8.17",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.7"
+      ],
+      "artifacts": [
+        "Frontend"
+      ]
+    }
+  }
+}

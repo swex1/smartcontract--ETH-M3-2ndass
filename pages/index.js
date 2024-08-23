@@ -3,13 +3,13 @@ import { ethers } from "ethers";
 import crypto_making_tree_abi from "../artifacts/contracts/Frontend.sol/Frontend.json";
 
 export default function Homepage() {
-  const [meMessage, setMeMessage] = useState("Account Holder Name: ANSHUMAN ROSHAN");
+  const [meMessage, setMeMessage] = useState("Account Holder Name: Sweta singh ");
   const [defaultAccount, setDefaultAccount] = useState(undefined);
   const [balance, setBalance] = useState(undefined);
   const [ethWallet, setEthWallet] = useState(undefined);
   const [Frontend, setFrontend] = useState(undefined);
 
-  const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+  const contractAddress = "c1419f99b9673306e8ecf2d52ac6360ce2a0d16d10915369645c296716f0d660";
   const smcABI = crypto_making_tree_abi.abi;
 
   const getBalance = async () => {
@@ -163,7 +163,7 @@ return (
   }, []);
 
   return (
-    <main className="ANSHUMAN ROSHAN">
+    <main className="sweta singh ">
       <h1>
         <marquee width="60%" direction="Left" height="80%">
         Welcome to Metacrafters ATM, where your banking journey begins with a warm greeting!
